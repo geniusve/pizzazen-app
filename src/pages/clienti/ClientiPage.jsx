@@ -366,7 +366,7 @@ function PannelloDettaglio({ clienteId, pizzeriaSlug, onModifica }) {
   const indirizzo    = [c.via, c.numero_civico].filter(Boolean).join(' ')
   const localita     = [c.cap, c.citta].filter(Boolean).join(' ')
   const linkSelfOrder = pizzeriaSlug && c.codice_cliente
-    ? `http://pizzazen.it/ordina/${pizzeriaSlug}/${c.codice_cliente}`
+    ? `http://pizzapax.it/ordina/${pizzeriaSlug}/${c.codice_cliente}`
     : null
 
   const TIPI = { asporto: '🥡 Asporto', delivery: '🛵 Delivery', tavolo: '🍽️ Tavolo' }

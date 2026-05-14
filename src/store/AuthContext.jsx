@@ -8,8 +8,8 @@ export function AuthProvider({ children }) {
   const [loading, setLoading] = useState(true)
 
   useEffect(() => {
-    const token = localStorage.getItem('pizzazen_token')
-    const saved = localStorage.getItem('pizzazen_utente')
+    const token = localStorage.getItem('pizzapax_token')
+    const saved = localStorage.getItem('pizzapax_utente')
     if (token && saved) setUtente(JSON.parse(saved))
     setLoading(false)
   }, [])
@@ -24,8 +24,8 @@ export function AuthProvider({ children }) {
       const utente = res.data?.utente || res.utente
       console.log('Token:', token)
       console.log('Utente:', utente)
-      localStorage.setItem('pizzazen_token', token)
-      localStorage.setItem('pizzazen_utente', JSON.stringify(utente))
+      localStorage.setItem('pizzapax_token', token)
+      localStorage.setItem('pizzapax_utente', JSON.stringify(utente))
       setUtente(utente)
       return utente
     } catch (err) {
@@ -35,8 +35,8 @@ export function AuthProvider({ children }) {
   }
 
   const logout = () => {
-    localStorage.removeItem('pizzazen_token')
-    localStorage.removeItem('pizzazen_utente')
+    localStorage.removeItem('pizzapax_token')
+    localStorage.removeItem('pizzapax_utente')
     setUtente(null)
   }
 

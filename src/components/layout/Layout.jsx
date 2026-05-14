@@ -142,7 +142,7 @@ export default function Layout({ children, notifiche = 0 }) {
         {/* Logo */}
         <div style={{ display: 'flex', alignItems: 'center', gap: 6 }}>
           <span style={{ fontSize: 18 }}>🍕</span>
-          <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>PizzaZen</span>
+          <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>PizzaPax</span>
         </div>
         <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
         <span style={{ fontSize: 12, color: '#64748b', fontWeight: 500 }}>
