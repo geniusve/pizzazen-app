@@ -3,6 +3,7 @@ import { useAuth } from '@/store/AuthContext'
 import Login from '@/pages/auth/Login'
 import Layout from '@/components/layout/Layout'
 import MenuPage from '@/pages/menu/MenuPage'
+import ClientiPage from '@/pages/clienti/ClientiPage'
 
 function ProtectedRoute({ children }) {
   const { utente, loading } = useAuth()
@@ -32,7 +33,7 @@ export default function App() {
       <Route path="/login" element={<Login />} />
       <Route path="/cassa/ordini"      element={<ProtectedRoute><Placeholder titolo="Ordini" /></ProtectedRoute>} />
       <Route path="/cassa/menu"        element={<ProtectedRoute><MenuPage /></ProtectedRoute>} />
-      <Route path="/cassa/clienti"     element={<ProtectedRoute><Placeholder titolo="Clienti" /></ProtectedRoute>} />
+      <Route path="/cassa/clienti"     element={<ProtectedRoute><ClientiPage /></ProtectedRoute>} />
       <Route path="/cassa/pizzeria"    element={<ProtectedRoute><Placeholder titolo="Impostazioni Pizzeria" /></ProtectedRoute>} />
       <Route path="/cassa/statistiche" element={<ProtectedRoute><Placeholder titolo="Statistiche" /></ProtectedRoute>} />
       <Route path="*" element={<Navigate to="/cassa/ordini" replace />} />

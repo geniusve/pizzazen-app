@@ -47,11 +47,12 @@ function BtnAllergene({ label, selezionato, onClick }) {
   )
 }
 
-function IconaIngrediente({ url }) {
+function IconaIngrediente({ url, v }) {
   const [err, setErr] = useState(false)
+  const src = err || !url ? PLACEHOLDER : `${url}${v ? `?v=${v}` : ''}`
   return (
     <img
-      src={err || !url ? PLACEHOLDER : url}
+      src={src}
       onError={() => setErr(true)}
       className="w-9 h-9 rounded-lg object-cover bg-gray-100 flex-shrink-0"
       alt=""
@@ -72,6 +73,7 @@ export default function Ingredienti() {
   const [form, setForm]                         = useState(FORM_VUOTO)
   const [errore, setErrore]                     = useState('')
   const [confermaDisattiva, setConfermaDisattiva] = useState(null)
+  const [imageVersions, setImageVersions]       = useState({})
   // icona
   const [showPickerModal, setShowPickerModal]   = useState(false)
   const [iconaMode, setIconaMode]               = useState(null)
@@ -91,6 +93,8 @@ export default function Ingredienti() {
     queryFn:  () => api.get('/pizzeria/ingredienti'),
   })
 
+  const bumpVersion = (id) => setImageVersions(v => ({ ...v, [id]: Date.now() }))
+
   const crea = useMutation({
     mutationFn: async () => {
       const res = await api.post('/pizzeria/ingredienti', {
@@ -102,10 +106,12 @@ export default function Ingredienti() {
       if (id && iconaFile) {
         const fd = new FormData(); fd.append('icona', iconaFile)
         await api.post(`/pizzeria/ingredienti/${id}/icona`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+        bumpVersion(id)
       }
       if (id && pizzaFile) {
         const fd = new FormData(); fd.append('immagine', pizzaFile)
         await api.post(`/pizzeria/ingredienti/${id}/immagine-pizza`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+        bumpVersion(id)
       } else if (id && pizzaUrl) {
         await api.put(`/pizzeria/ingredienti/${id}`, { immagine_pizza_url: pizzaUrl })
       }
@@ -125,10 +131,12 @@ export default function Ingredienti() {
       if (iconaFile) {
         const fd = new FormData(); fd.append('icona', iconaFile)
         await api.post(`/pizzeria/ingredienti/${editId}/icona`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+        bumpVersion(editId)
       }
       if (pizzaFile) {
         const fd = new FormData(); fd.append('immagine', pizzaFile)
         await api.post(`/pizzeria/ingredienti/${editId}/immagine-pizza`, fd, { headers: { 'Content-Type': 'multipart/form-data' } })
+        bumpVersion(editId)
       } else if (pizzaUrl) {
         await api.put(`/pizzeria/ingredienti/${editId}`, { immagine_pizza_url: pizzaUrl })
       }
@@ -401,7 +409,7 @@ export default function Ingredienti() {
                       borderTop: idx === 0 ? 'none' : '1px solid #f8fafc',
                       opacity: ing.attivo ? 1 : 0.55,
                     }}>
-                      <IconaIngrediente url={ing.icona_url} />
+                      <IconaIngrediente url={ing.icona_url} v={imageVersions[ing.id]} />
                       <div style={{ flex: 1, minWidth: 0 }}>
                         <div style={{ display: 'flex', alignItems: 'center', gap: 6, flexWrap: 'wrap' }}>
                           <span style={{ fontSize: 13, fontWeight: 600, color: '#1e293b' }}>{ing.descrizione}</span>
@@ -818,7 +826,7 @@ export default function Ingredienti() {
                           background: 'repeating-conic-gradient(#e2e8f0 0% 25%, #fff 0% 50%) 0 0 / 10px 10px',
                           display: 'flex', alignItems: 'center', justifyContent: 'center',
                         }}>
-                          <img src={ing.immagine_pizza_url} alt=""
+                          <img src={`${ing.immagine_pizza_url}${imageVersions[ing.id] ? `?v=${imageVersions[ing.id]}` : ''}`} alt=""
                             style={{ width: 52, height: 52, objectFit: 'contain', display: 'block' }} />
                         </div>
                         <span style={{

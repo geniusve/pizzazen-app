@@ -36,6 +36,7 @@ export default function Layout({ children, notifiche = 0 }) {
   const [online, setOnline]           = useState(navigator.onLine)
   const [serverOk, setServerOk]       = useState(null)
   const [waStatus, setWaStatus]       = useState(null)
+  const [ora, setOra]                 = useState(new Date())
   const [showMenu, setShowMenu]       = useState(false)
   const [showPwModal, setShowPwModal] = useState(false)
   const [nuovaPassword, setNuovaPassword]     = useState('')
@@ -43,6 +44,18 @@ export default function Layout({ children, notifiche = 0 }) {
   const [pwErrore, setPwErrore]       = useState('')
   const [pwSuccesso, setPwSuccesso]   = useState(false)
   const menuRef = useRef(null)
+
+  // Orologio — aggiorna ogni minuto
+  useEffect(() => {
+    const tick = () => setOra(new Date())
+    const ms = (60 - new Date().getSeconds()) * 1000
+    const timeout = setTimeout(() => { tick(); const id = setInterval(tick, 60000); return () => clearInterval(id) }, ms)
+    return () => clearTimeout(timeout)
+  }, [])
+
+  const dataFormattata = ora.toLocaleDateString('it-IT', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' })
+  const oraFormattata  = ora.toLocaleTimeString('it-IT', { hour: '2-digit', minute: '2-digit' })
+  const dataCapitalized = dataFormattata.charAt(0).toUpperCase() + dataFormattata.slice(1)
 
   // Online/Offline
   useEffect(() => {
@@ -137,6 +150,13 @@ export default function Layout({ children, notifiche = 0 }) {
         </span>
 
         <div style={{ flex: 1 }} />
+
+        {/* Data e ora */}
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end', lineHeight: 1.2 }}>
+          <span style={{ fontSize: 15, color: '#1e293b', fontWeight: 700 }}>{oraFormattata}</span>
+          <span style={{ fontSize: 10, color: '#94a3b8', fontWeight: 400 }}>{dataCapitalized}</span>
+        </div>
+        <div style={{ width: 1, height: 16, background: '#e2e8f0' }} />
 
         {/* Status indicators */}
         <StatusDot ok={online}    label={online ? 'Online' : 'Offline'} />
